@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 
 class AppStrings {
   static const List<String> titles = [
-    'Flutter',
-    'Dart',
-    'Firebase',
-    'Google Cloud',
-    'AWS',
-    'Azure',
-    'Kubernetes',
-    'Docker',
-    'Jenkins',
+    'Frontend developer',
+    'Backend developer',
+    'DevOps developer',
+    'React developer',
+    'Angular developer',
+    'Android developer',
+    'Python developer',
+    'Go developer',
+    'Java developer',
   ];
 
   static const List<String> subtitles = [

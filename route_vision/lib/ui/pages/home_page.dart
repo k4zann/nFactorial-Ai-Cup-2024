@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:route_vision/constants/app_strings.dart';
-import 'package:route_vision/models/ready_roadmap_model.dart';
+import 'package:route_vision/models/roadmap_details.dart';
+import 'package:route_vision/ui/pages/created_roadmap_page.dart';
 import 'package:route_vision/ui/widgets/textfield_generate_button.dart';
 
-import 'ready_roadmap_page.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -15,6 +17,155 @@ class _HomePageState extends State<HomePage> {
     'search': TextEditingController(),
   };
 
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _generateContent() async {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        int hoursPerDay = 2;
+        int months = 6;
+        String learningMethod = 'practical projects';
+
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(16.0),
+                height: 400,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Enter details for your roadmap',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Hours per day',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white70),
+                        filled: true,
+                        fillColor: Colors.white10,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        hoursPerDay = int.tryParse(value) ?? hoursPerDay;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Months to become professional',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white70),
+                        filled: true,
+                        fillColor: Colors.white10,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        months = int.tryParse(value) ?? months;
+                      },
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      decoration: InputDecoration(
+                        labelText: 'Learning method (e.g., studying courses, practical projects)',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        hintStyle: const TextStyle(color: Colors.white70),
+                        filled: true,
+                        fillColor: Colors.white10,
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                          borderSide: const BorderSide(
+                            color: Colors.blue,
+                          ),
+                        ),
+                      ),
+                      onChanged: (value) {
+                        learningMethod = value;
+                      },
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CreatedRoadmapPage(
+                              roadmapDetails: RoadmapDetails(
+                                direction: _controllers['search']!.text,
+                                hoursPerDay: hoursPerDay,
+                                months: months,
+                                learningMethod: learningMethod,
+                              ), weekNumber: 1,
+                            ),
+                          ),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF2A293B),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                      ),
+                      child: const Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(Icons.auto_awesome, color: Colors.white),
+                          SizedBox(width: 5),
+                          Text('Generate roadmap', style: TextStyle(color: Colors.white)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controllers.forEach((key, value) {
+      value.dispose();
+    });
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +182,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             TextFieldWithGenerateButton(
               searchController: _controllers['search']!,
+              onGenerate: _generateContent,
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -50,13 +202,15 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ReadyRoadmapPage(
-                            direction: ReadyRoadmapModel(
-                              title: AppStrings.titles[index],
-                              description: AppStrings.subtitles[index],
-                              image: '',
-                            ),
-                          ),
+                          builder: (context) => CreatedRoadmapPage(
+                              roadmapDetails: RoadmapDetails(
+                                direction: AppStrings.titles[index],
+                                hoursPerDay: 2,
+                                months: 6,
+                                learningMethod: 'practical projects',
+                              ),
+                            weekNumber: 1,
+                          )
                         ),
                       );
                     },
@@ -98,7 +252,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 5),
               Text(
                 subtitle,
-                style: const TextStyle(color: Colors.white70),
+                style: const TextStyle(color: Colors.white70, fontSize: 16),
               ),
             ],
           ),

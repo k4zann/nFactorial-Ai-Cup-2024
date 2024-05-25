@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TextFieldWithGenerateButton extends StatefulWidget {
-  const TextFieldWithGenerateButton({super.key, required this.searchController});
+  const TextFieldWithGenerateButton({super.key,
+    required this.searchController,
+    required this.onGenerate
+  });
 
   final TextEditingController searchController;
-
+  final Function() onGenerate;
   @override
   State<TextFieldWithGenerateButton> createState() => _TextFieldWithGenerateButtonState();
 }
@@ -53,10 +56,10 @@ class _TextFieldWithGenerateButtonState extends State<TextFieldWithGenerateButto
             const SizedBox(width: 10),
             ElevatedButton(
               onPressed: () {
-                print("clicked the generate button");
+                widget.onGenerate();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: const Color(0xFF2A293B),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                 shape: RoundedRectangleBorder(

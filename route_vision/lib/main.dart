@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:route_vision/ui/pages/home_page.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         hintColor: Colors.yellow,
         scaffoldBackgroundColor: Color(0xFF1C1B29),
       ),
-      home: HomePage(),
+      home: const HomePage(),
     );
   }
 }
